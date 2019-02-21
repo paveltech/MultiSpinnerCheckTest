@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 new dynamicFieldCall().execute("http://o1bazaar.com/api/form/additionalFields?category_id=46");
             }
         });
+
+
         viewProductLayout.removeAllViews();
         new dynamicFieldCall().execute("http://o1bazaar.com/api/form/additionalFields?category_id=46");
 
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
                 getDataFromDynamicViews();
             }
         });
+
+
+
     }
 
 
@@ -327,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
 
                     optionsObj.put("" + eachData.getString(Constant.OPTION_NAME), jsonArrayCheckList);
 
+
+
                     Log.d(Constant.NAME, tempChkBox.getTag().toString() + "");
                 }
 
@@ -349,7 +356,6 @@ public class MainActivity extends AppCompatActivity {
                         optionsObj.put(eachData.getString(Constant.OPTION_NAME), textView.getText().toString());
                     Log.d(Constant.NAME, textView.getText().toString() + "");
                 }
-
 
             }
 
