@@ -108,13 +108,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if (eachData.getString(Constant.TYPE).equals(Constant.CHECKBOX)) {
                     JSONArray checkBoxJSONOpt = eachData.getJSONArray(Constant.VALUES);
-
+                    CheckBox chk = null;
                     for (int j = 0; j < checkBoxJSONOpt.length(); j++) {
-                        CheckBox chk = new CheckBox(MainActivity.this);
+                        chk = new CheckBox(MainActivity.this);
 
                         chk.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                        allViewInstance.add(chk);
-
                         //Log.d("CHECK_DOWN", "check views number: " + j);
                         //Log.d("CHECK_DOWN", "check views: " + allViewInstance.get(j));
 
@@ -137,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         chk.setText(optionString);
                         viewProductLayout.addView(chk, params);
                     }
+
+                    allViewInstance.add(chk);
 
                 }
 
@@ -286,19 +286,15 @@ public class MainActivity extends AppCompatActivity {
             Log.d("CHECK_DOWN", "child count : " + total);
 
 
-            for (int i =0 ;i<=4;i++){
+            for (int i = 0; i <customOptnList.length(); i++) {
                 Log.d("CHECK_DOWN", "single view: " + i);
                 Log.d("CHECK_DOWN", "single view: " + allViewInstance.get(i).toString());
-
-                JSONObject eachData = customOptnList.getJSONObject(i);
             }
-            /*
-            for (int noOfViews = 0; noOfViews < allViewInstance.size(); noOfViews++) {
+
+            for (int noOfViews = 0; noOfViews < customOptnList.length(); noOfViews++) {
 
                 //Log.d("CHECK_DOWN", "view count: " + noOfViews);
                 //Log.d("CHECK_DOWN", "single view: " + allViewInstance.get(0).toString());
-
-
 
                 JSONObject eachData = customOptnList.getJSONObject(noOfViews);
 
@@ -356,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-            */
 
 
             outputData = (optionsObj + "").replace(",", "\n");
