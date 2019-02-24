@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
 
@@ -118,10 +117,6 @@ public class MainActivity extends AppCompatActivity {
                         chk = new CheckBox(MainActivity.this);
 
                         chk.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                        //Log.d("CHECK_DOWN", "check views number: " + j);
-                        //Log.d("CHECK_DOWN", "check views: " + allViewInstance.get(j));
-
-
                         chk.setTag(checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME));
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.topMargin = 3;
@@ -286,23 +281,9 @@ public class MainActivity extends AppCompatActivity {
             JSONArray customOptnList = jsonObject.getJSONArray(Constant.FIELDS);
             optionsObj = new JSONObject();
 
-            int total = allViewInstance.size();
-
-            Log.d("CHECK_DOWN", "child count : " + total);
-
-
-            for (int i = 0; i <customOptnList.length(); i++) {
-                Log.d("CHECK_DOWN", "single view: " + i);
-                Log.d("CHECK_DOWN", "single view: " + allViewInstance.get(i).toString());
-            }
 
             for (int noOfViews = 0; noOfViews < customOptnList.length(); noOfViews++) {
-
-                //Log.d("CHECK_DOWN", "view count: " + noOfViews);
-                //Log.d("CHECK_DOWN", "single view: " + allViewInstance.get(0).toString());
-
                 JSONObject eachData = customOptnList.getJSONObject(noOfViews);
-
                 if (eachData.getString(Constant.TYPE).equals(Constant.SPINNER)) {
                     Spinner spinner = (Spinner) allViewInstance.get(noOfViews);
                     JSONArray dropDownJSONOpt = eachData.getJSONArray(Constant.VALUES);
@@ -325,13 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 if (eachData.getString(Constant.TYPE).equals(Constant.CHECKBOX)) {
                     CheckBox tempChkBox = (CheckBox) allViewInstance.get(noOfViews);
 
-                    //if (tempChkBox.isChecked()) {
-                    //optionsObj.put(eachData.getString(Constant.OPTION_NAME), tempChkBox.getTag().toString());
-                    //}
-
-
                     optionsObj.put("" + eachData.getString(Constant.OPTION_NAME), jsonArrayCheckList);
-
 
 
                     Log.d(Constant.NAME, tempChkBox.getTag().toString() + "");
@@ -373,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
 
         return optionsObj;
     }
+
 
     public void hideSoftKeyboard(View v) {
         if (getCurrentFocus() != null) {

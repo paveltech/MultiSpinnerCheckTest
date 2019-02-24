@@ -28,7 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +40,7 @@ public class EditActivity extends AppCompatActivity {
     ArrayList<View> allViewInstance = new ArrayList<View>();
     JSONObject jsonObject = new JSONObject();
 
-    List<String> selectedCheckList = new ArrayList<>();
+    List<String> selectedCheckList;
 
     private JSONObject optionsObj;
 
@@ -52,6 +54,8 @@ public class EditActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    Map<String, List<String>> checkMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,8 @@ public class EditActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        selectedCheckList = new ArrayList<>();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +132,8 @@ public class EditActivity extends AppCompatActivity {
                     for (String value : selectedCheckList) {
                         jsonArrayCheckList.put(value);
                     }
+
+                    Log.d("CHECK_MAP", "" + checkMap.toString());
 
                     optionsObj.put("" + eachData.getString(Constant.OPTION_NAME), jsonArrayCheckList);
 
@@ -324,27 +332,20 @@ public class EditActivity extends AppCompatActivity {
                 if (eachData.getString(Constant.TYPE).equals(Constant.CHECKBOX)) {
                     JSONArray checkBoxJSONOpt = eachData.getJSONArray(Constant.VALUES);
 
-                    String[] mainList = {eachData.getString(Constant.VALUES).toString()};
-                    final String[] secondList = {eachData.getString(Constant.SELECTED_VALUE).toString()};
-
-                    int[] positions = new int[100];
-
                     CheckBox chk = null;
 
                     for (int j = 0; j < checkBoxJSONOpt.length(); j++) {
 
                         chk = new CheckBox(getApplicationContext());
                         chk.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                        chk.setTag(checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME));
 
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.topMargin = 3;
                         params.bottomMargin = 3;
-                        String optionString = checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME);
+                        final String optionString = checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME);
 
                         if (checkBoxJSONOpt.getJSONObject(j).getString(Constant.CHECKED).contains("true")) {
                             String options = checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME);
-                            //jsonArrayCheckList.put(options);
                             selectedCheckList.add(options);
                             chk.setChecked(true);
                         }
@@ -367,6 +368,7 @@ public class EditActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
+                                checkMap.put(optionString, selectedCheckList);
                             }
                         });
 
