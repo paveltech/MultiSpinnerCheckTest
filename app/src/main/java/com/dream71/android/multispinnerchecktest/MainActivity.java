@@ -145,9 +145,16 @@ public class MainActivity extends AppCompatActivity {
                     final JSONArray dropDownJSONOpt = eachData.getJSONArray(Constant.VALUES);
                     ArrayList<String> SpinnerOptions = new ArrayList<String>();
 
-                    for (int j = 0; j < dropDownJSONOpt.length(); j++) {
-                        String optionString = dropDownJSONOpt.getJSONObject(j).getString(Constant.NAME);
-                        SpinnerOptions.add(optionString);
+
+                    for (int j = -1; j < dropDownJSONOpt.length(); j++) {
+
+                        if (j == -1) {
+                            SpinnerOptions.add("Select Here");
+                        } else {
+                            String optionString = dropDownJSONOpt.getJSONObject(j).getString(Constant.NAME);
+                            SpinnerOptions.add(optionString);
+                        }
+
                     }
 
                     ArrayAdapter<String> spinnerArrayAdapter = null;
@@ -157,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                     allViewInstance.add(spinner);
 
                     spinner.setAdapter(spinnerArrayAdapter);
-                    spinner.setSelection(0, false);
+                    //spinner.setSelection(0, false);
                     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -284,15 +291,20 @@ public class MainActivity extends AppCompatActivity {
 
             for (int noOfViews = 0; noOfViews < customOptnList.length(); noOfViews++) {
                 JSONObject eachData = customOptnList.getJSONObject(noOfViews);
+
                 if (eachData.getString(Constant.TYPE).equals(Constant.SPINNER)) {
                     Spinner spinner = (Spinner) allViewInstance.get(noOfViews);
                     JSONArray dropDownJSONOpt = eachData.getJSONArray(Constant.VALUES);
 
-                    String variant_name = dropDownJSONOpt.getJSONObject(spinner.getSelectedItemPosition()).getString(Constant.NAME);
-
-                    Log.d(Constant.NAME, variant_name + "");
-                    optionsObj.put(eachData.getString(Constant.OPTION_NAME),
-                            "" + variant_name);
+                    int selectPosition = spinner.getSelectedItemPosition();
+                    if (selectPosition == 0) {
+                        optionsObj.put(eachData.getString(Constant.OPTION_NAME),
+                                "");
+                    } else {
+                        String variant_name = dropDownJSONOpt.getJSONObject(selectPosition-1).getString(Constant.NAME);
+                        optionsObj.put(eachData.getString(Constant.OPTION_NAME),
+                                "" + variant_name);
+                    }
                 }
 
                 if (eachData.getString(Constant.TYPE).equals(Constant.RADIOBUTTON)) {

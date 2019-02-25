@@ -1,6 +1,7 @@
 package com.dream71.android.multispinnerchecktest;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -40,7 +41,6 @@ public class EditActivity extends AppCompatActivity {
     ArrayList<View> allViewInstance = new ArrayList<View>();
     JSONObject jsonObject = new JSONObject();
 
-    List<String> selectedCheckList;
 
     private JSONObject optionsObj;
 
@@ -54,7 +54,7 @@ public class EditActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
-    Map<String, List<String>> checkMap = new HashMap<>();
+    Map<String, String> checkMap = new HashMap<>();
 
 
     @Override
@@ -65,7 +65,6 @@ public class EditActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        selectedCheckList = new ArrayList<>();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,14 +127,16 @@ public class EditActivity extends AppCompatActivity {
                     //optionsObj.put(eachData.getString(Constant.OPTION_NAME), tempChkBox.getTag().toString());
                     //}
 
+                    /*
                     JSONArray jsonArrayCheckList = new JSONArray();
                     for (String value : selectedCheckList) {
                         jsonArrayCheckList.put(value);
                     }
+                    */
 
                     Log.d("CHECK_MAP", "" + checkMap.toString());
 
-                    optionsObj.put("" + eachData.getString(Constant.OPTION_NAME), jsonArrayCheckList);
+                    //optionsObj.put("" + eachData.getString(Constant.OPTION_NAME), jsonArrayCheckList);
 
                     Log.d(Constant.NAME, tempChkBox.getTag().toString() + "");
                 }
@@ -224,129 +225,31 @@ public class EditActivity extends AppCompatActivity {
                 viewProductLayout.addView(customOptionsName);
 
 
-                if (eachData.getString(Constant.TYPE).equals(Constant.SPINNER)) {
-                    final JSONArray dropDownJSONOpt = eachData.getJSONArray(Constant.VALUES);
-                    ArrayList<String> SpinnerOptions = new ArrayList<String>();
-
-                    String selectedValue = eachData.getString(Constant.SELECTED_VALUE);
-                    int position = 0;
-
-                    for (int j = 0; j < dropDownJSONOpt.length(); j++) {
-                        if (dropDownJSONOpt.getJSONObject(j).getString(Constant.NAME).contains(selectedValue)) {
-                            position = j;
-                        }
-                    }
-
-
-                    for (int j = 0; j < dropDownJSONOpt.length(); j++) {
-                        String optionString = dropDownJSONOpt.getJSONObject(j).getString(Constant.NAME);
-                        SpinnerOptions.add(optionString);
-                    }
-
-                    ArrayAdapter<String> spinnerArrayAdapter = null;
-                    spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spiner_row, SpinnerOptions);
-                    Spinner spinner = new Spinner(getApplicationContext());
-                    allViewInstance.add(spinner);
-
-
-                    spinner.setAdapter(spinnerArrayAdapter);
-                    spinner.setSelection(position, false);
-                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                            try {
-                                String variant_name = dropDownJSONOpt.getJSONObject(position).getString(Constant.NAME);
-                                //Toast.makeText(getActivity(), variant_name + "", Toast.LENGTH_LONG).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parentView) {
-                        }
-
-                    });
-                    viewProductLayout.addView(spinner);
-                }
-
-
-//                    /***************************Radio*****************************************************/
-
-
-                if (eachData.getString(Constant.TYPE).equals(Constant.RADIOBUTTON)) {
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.topMargin = 3;
-                    params.bottomMargin = 3;
-
-                    final JSONArray radioButtonJSONOpt = eachData.getJSONArray(Constant.VALUES);
-                    RadioGroup rg = new RadioGroup(getApplicationContext()); //create the RadioGroup
-                    allViewInstance.add(rg);
-
-                    String selectedValue = eachData.getString(Constant.SELECTED_VALUE);
-                    int position = 0;
-
-
-                    for (int j = 0; j < radioButtonJSONOpt.length(); j++) {
-                        if (radioButtonJSONOpt.getJSONObject(j).getString(Constant.NAME).contains(selectedValue)) {
-                            position = j;
-                        }
-                    }
-
-                    for (int j = 0; j < radioButtonJSONOpt.length(); j++) {
-
-                        RadioButton rb = new RadioButton(getApplicationContext());
-                        rg.addView(rb, params);
-
-
-                        if (j == position)
-                            rb.setChecked(true);
-
-
-                        rb.setLayoutParams(params);
-                        rb.setTag(radioButtonJSONOpt.getJSONObject(j).getString(Constant.NAME));
-
-                        rb.setBackgroundColor(Color.parseColor("#FFFFFF"));
-
-                        String optionString = radioButtonJSONOpt.getJSONObject(j).getString(Constant.NAME);
-                        rb.setText(optionString);
-
-
-                        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-                            @Override
-                            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                                View radioButton = group.findViewById(checkedId);
-                                //String variant_name = radioButton.getTag().toString();
-                                //Toast.makeText(getApplicationContext(), variant_name + "", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                    }
-                    viewProductLayout.addView(rg, params);
-                }
-
-//                    /***********************************CheckBox ***********************************************/
+                //***********************************CheckBox ***********************************************/
 
                 if (eachData.getString(Constant.TYPE).equals(Constant.CHECKBOX)) {
                     JSONArray checkBoxJSONOpt = eachData.getJSONArray(Constant.VALUES);
-
+                    final String data = eachData.getString(Constant.NAME);
                     CheckBox chk = null;
 
                     for (int j = 0; j < checkBoxJSONOpt.length(); j++) {
 
                         chk = new CheckBox(getApplicationContext());
                         chk.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                        chk.setTag(checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME));
 
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.topMargin = 3;
                         params.bottomMargin = 3;
                         final String optionString = checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME);
 
+                        //Log.d("CHECK_MAP", "" + data);
+
+                        //selectedCheckList = new ArrayList<>();
+
                         if (checkBoxJSONOpt.getJSONObject(j).getString(Constant.CHECKED).contains("true")) {
                             String options = checkBoxJSONOpt.getJSONObject(j).getString(Constant.NAME);
-                            selectedCheckList.add(options);
+                            checkMap.put(data, options);
                             chk.setChecked(true);
                         }
 
@@ -358,17 +261,21 @@ public class EditActivity extends AppCompatActivity {
 
                                 if (finalChk.isChecked()) {
                                     String variant_name = v.getTag().toString();
-                                    selectedCheckList.add(variant_name);
+                                    checkMap.put(data, variant_name);
                                 } else {
                                     String variant_name = v.getTag().toString();
-                                    for (int i = 0; i < selectedCheckList.size(); i++) {
-                                        String value = selectedCheckList.get(i);
+
+                                    for (int i = 0; i < checkMap.size(); i++) {
+
+                                        String value = checkMap.toString();
+
                                         if (value.equals(variant_name)) {
-                                            selectedCheckList.remove(value);
+
+                                            checkMap.remove(value);
                                         }
                                     }
                                 }
-                                checkMap.put(optionString, selectedCheckList);
+                                //checkMap.put(data, selectedCheckList);
                             }
                         });
 
@@ -380,30 +287,6 @@ public class EditActivity extends AppCompatActivity {
                     //}
                 }
 
-                if (eachData.getString(Constant.TYPE).equals(Constant.EDITTEXT)) {
-                    String selectedValue = eachData.getString(Constant.SELECTED_VALUE);
-                    EditText et = new EditText(getApplicationContext());
-                    et.setHint("" + eachData.getString(Constant.LABEL));
-                    et.setPadding(20, 40, 0, 40);
-
-                    if (selectedValue != null) {
-                        et.setText(selectedValue);
-                    } else {
-                        et.setText("");
-                    }
-
-                    // Initialize a new GradientDrawable instance
-                    GradientDrawable gd = new GradientDrawable();
-                    gd.setColor(Color.parseColor("#ffffff"));
-                    gd.setCornerRadius(3);
-
-                    gd.setStroke(2, getResources().getColor(R.color.colorAccent));
-                    et.setBackground(gd);
-
-                    //til.addView(et);
-                    allViewInstance.add(et);
-                    viewProductLayout.addView(et);
-                }
 
                 if (eachData.getString(Constant.TYPE).equals(Constant.TEXT_AREA)) {
                     //TextInputLayout til = new TextInputLayout(getActivity());
